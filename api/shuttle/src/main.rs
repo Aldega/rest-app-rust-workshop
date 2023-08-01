@@ -7,12 +7,12 @@ async fn hello_world() -> &'static str {
 }
 
 #[get("/artem")]
-async fn hello_artem() -> &'static str {
+async fn artem() -> &'static str {
     "Hello Artem!"
 }
 
 #[get("/liza")]
-async fn hello_liza() -> &'static str {
+async fn liza() -> &'static str {
     "Hello Elizaveta!"
 }
 
@@ -20,6 +20,8 @@ async fn hello_liza() -> &'static str {
 async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
     let config = move |cfg: &mut ServiceConfig| {
         cfg.service(hello_world);
+        cfg.service(artem);
+        cfg.service(liza);
     };
 
     Ok(config.into())
