@@ -1,5 +1,7 @@
 use actix_web::{get, web::ServiceConfig};
 use shuttle_actix_web::ShuttleActixWeb;
+use shuttle_runtime::CustomError;
+use sqlx::Executor;
 
 #[get("/")]
 async fn hello_world() -> &'static str {
@@ -25,6 +27,11 @@ async fn actix_web(
         cfg.service(artem);
         cfg.service(liza);
     };
+
+    // initialize the database if not already initialized
+    pool.execute(include_str!("../../db/schema.sql"))
+        .await
+        .map_err(CustomError::new)?;
 
     Ok(config.into())
 }
